@@ -1,37 +1,31 @@
 package com.plandecks.auth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class TokenBlacklistService {
 
-    private final BlacklistedTokenRepository blacklistedTokenRepository;
+    private final RedisTemplate<String, String> redisTemplate;
     private final JwtUtil jwtUtil;
 
+    private static final String BLACKLIST_PREFIX = "blacklist:";
+
     public void addToBlacklist(String token) {
-        if (!blacklistedTokenRepository.existsByToken(token)) {
+        Date expiration = jwtUtil.extractExpiration(token);
+        long ttl = expiration.getTime() - System.currentTimeMillis();
 
-            Date expiration = jwtUtil.extractExpiration(token);
-
-            BlacklistedToken blacklistedToken = BlacklistedToken.builder()
-                    .token(token)
-                    .blacklistedAt(new Date())
-                    .expiresAt(expiration)
-                    .build();
-            blacklistedTokenRepository.save(blacklistedToken);
+        if (ttl > 0) {
+            redisTemplate.opsForValue().set(BLACKLIST_PREFIX + token, "true", ttl, TimeUnit.MILLISECONDS);
         }
     }
 
     public boolean isBlacklisted(String token) {
-        return blacklistedTokenRepository.existsByToken(token);
-    }
-
-    public void deleteExpiredTokens() {
-        Date now = new Date();
-        blacklistedTokenRepository.deleteByExpiresAtBefore(now);
+        return redisTemplate.hasKey(BLACKLIST_PREFIX + token);
     }
 }

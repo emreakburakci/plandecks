@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         // Auth endpoints serbest
-                        .requestMatchers("/api/auth/**").permitAll()
+                        // .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
                         // Swagger serbest
                         .requestMatchers(

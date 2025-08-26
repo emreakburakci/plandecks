@@ -2,5 +2,5 @@ package com.plandecks.auth;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface LoginLogRepository extends JpaRepository<LoginLog, Long> {
+public interface UserLogRepository extends JpaRepository<UserLog, Long> {
 }
