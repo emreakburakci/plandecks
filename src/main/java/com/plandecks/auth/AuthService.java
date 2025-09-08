@@ -23,6 +23,7 @@ public class AuthService {
         User user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
+                .roles(request.getRoles())
                 .build();
         userRepository.save(user);
         UserLog log = UserLog.builder()
@@ -35,7 +36,7 @@ public class AuthService {
 
         userLogRepository.save(log);
 
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getEmail(), user.getRoles());
     }
 
     public String login(LoginRequest request) {
@@ -57,7 +58,7 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(user.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRoles());
 
         // Login log kaydı
         UserLog log = UserLog.builder()

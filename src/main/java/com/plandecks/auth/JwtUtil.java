@@ -6,9 +6,12 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.Set;
 
 @Component
 public class JwtUtil {
+
+    // TODO bu değer environment variable olarak alınmalı
     private final String SECRET_KEY = "supersecretkeysupersecretkeysupersecretkey"; // en az 32 byte
     private final long EXPIRATION = 1000 * 60 * 60; // 1 saat
 
@@ -16,9 +19,10 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, Set<String> roles) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

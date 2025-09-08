@@ -28,7 +28,21 @@
     </scm>
     <properties>
         <java.version>21</java.version>
+        <version.org.optaplanner>9.44.0.Final</version.org.optaplanner>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.optaplanner</groupId>
+                <artifactId>optaplanner-bom</artifactId>
+                <version>${version.org.optaplanner}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -101,6 +115,19 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.optaplanner</groupId>
+            <artifactId>optaplanner-test</artifactId>
+
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.drools/drools-core -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version>9.44.0.Final</version>
         </dependency>
 
     </dependencies>

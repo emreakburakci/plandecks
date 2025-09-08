@@ -33,11 +33,11 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Auth endpoints serbest
-                        // .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
-                        // Swagger serbest
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+//                        .requestMatchers("/admin/**").hasRole("ADMIN") // Sadece ADMIN rolü erişebilir
+//                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // USER veya ADMIN erişebilir
+
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
